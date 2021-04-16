@@ -4,6 +4,8 @@
 
 PSQL_BIN="/usr/bin/psql"
 FS_CLI_BIN="/usr/bin/fs_cli"
+FS_CLI_API_TIMEOUT="5000"
+FS_CLI_SOCKET_TIMEOUT="5000"
 LOG_FILENAME="/var/log/freeswitch/clean_fs_calls.log"
 PGSQL_HOSTNAME="127.0.0.1"
 PGSQL_PORT="5432"
@@ -20,7 +22,7 @@ function log {
 function check_fs_call {
 	FS_HOST=$1
 	UUID=$2
-	FS_CLI_OUTPUT=$(${FS_CLI_BIN} -H ${FS_HOST} -x "uuid_getvar ${UUID} uuid" 2>&1)
+	FS_CLI_OUTPUT=$(${FS_CLI_BIN} -H ${FS_HOST} -t ${FS_CLI_API_TIMEOUT} -T ${FS_CLI_SOCKET_TIMEOUT} -x "uuid_getvar ${UUID} uuid" 2>&1)
 	if [[ "$?" -ne 0 ]]; then
 		log "[ERROR] Checking UUID '${UUID}' on FS '${FS_HOST}': ERROR."
 		return 0
